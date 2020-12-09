@@ -3,6 +3,9 @@
 int dataPoints[totalFloats]; // Stores the latest data values.
 int floatPins[] = { 5, 6, 7, 8, 9 }; // We use 5 digital only pins on the micro:bit
 
+pinMode(1, OUTPUT);
+digitalWrite(1, LOW);
+
 void setup() {
 //  Prep Serial
   Serial.begin(9600);
@@ -23,6 +26,13 @@ void loop() {
 //  If we have a change, report this back over serial.
   if (floatChanged()) {
     sendFloats();
+  }
+
+  if (InputPump()) {
+    digitalWrite(LED, HIGH);
+  }
+  else {
+    digitalWrite(LED, LOW);
   }
 
 //  Check for inputs from Serial.
