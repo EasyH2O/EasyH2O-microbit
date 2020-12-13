@@ -11,6 +11,7 @@ int pumpState = 0;         // Variable for reading the pump status
 void setup() {
 //  Prep Serial
   Serial.begin(9600);
+  Serial.setTimeout(20);
 
 
 //  Prep float pins
@@ -44,7 +45,6 @@ void loop() {
   }
   if (buttonState == HIGH && buttonPressed == true){
     switchPump();
-    Serial.setTimeout(20);
     buttonPressed = false;
     }
 
@@ -70,6 +70,7 @@ void sendFloats() {
 
     //    We end with a semicolon to indicate the end of this event.
     Serial.print(';');
+    Serial.print("\n");
 }
 
 boolean floatChanged() {
