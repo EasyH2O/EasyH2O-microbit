@@ -2,19 +2,26 @@
 
 int dataPoints[totalFloats]; // Stores the latest data values.
 int floatPins[] = { 5, 6, 7, 8, 9 }; // We use 5 digital only pins on the micro:bit
-
-pinMode(1, OUTPUT);
-digitalWrite(1, LOW);
+const int buttonPin = 11;     // the number of the pushbutton pin
+const int pumpPin =  13;      // the number of the pump 
+int buttonState = 0;         // variable for reading the pushbutton status
+int pumpState = 0;         // variable for reading the pump status
 
 void setup() {
 //  Prep Serial
   Serial.begin(9600);
+  Serial.setTimeout(20);
 
 
 //  Prep float pins
   for (int i = 0; i < totalFloats; i++) {
     pinMode(floatPins[i], INPUT_PULLUP);
   }
+
+  // initialize the pump pin as an output:
+  pinMode(pumpPin, OUTPUT);
+  // initialize the pushbutton as an input:
+  pinMode(buttonPin, INPUT_PULLUP);
   
   while (!Serial) {
     // Wait for Serial to connect
@@ -22,24 +29,27 @@ void setup() {
 }
 
 // Main program loop
-void loop() {
+void loop() {  
+  // read the state of the pushbutton value:
+  buttonState = digitalRead(buttonPin);
+  
 //  If we have a change, report this back over serial.
   if (floatChanged()) {
     sendFloats();
   }
 
-  if (InputPump()) {
-    digitalWrite(LED, HIGH);
+  // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+  if (buttonState == LOW) {
+    switchPump();
   }
-  else {
-    digitalWrite(LED, LOW);
-  }
+    
 
 //  Check for inputs from Serial.
     String command = Serial.readStringUntil(';'); // We read from the serial port, commands are ended with a semicolon, so that is our trigger.
 
 //  Check against know command codes.
     if (command == "RF") sendFloats(); // When to command is RF (Read Floats) we send the float data.
+    if (command == "SP") switchPump(); // When to command is Pump we switch the pump.
 }
 
 // We read the serial command
@@ -76,4 +86,19 @@ boolean floatChanged() {
   }
 
   return hasChanged;
+}
+
+void switchPump() {
+  if (pumpState == 1) {
+      // turn pump off:
+      digitalWrite(pumpPin, LOW);
+      pumpState = 0;
+      Serial.print("Switched to 0");
+    }
+    else {
+      //  pump on:
+      digitalWrite(pumpPin, HIGH);
+      pumpState = 1;
+      Serial.print("Switched to 1");
+    }
 }
