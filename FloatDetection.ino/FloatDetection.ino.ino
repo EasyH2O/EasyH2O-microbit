@@ -70,7 +70,6 @@ void sendFloats() {
 
     //    We end with a semicolon to indicate the end of this event.
     Serial.print(';');
-    Serial.print("\n");
 }
 
 boolean floatChanged() {
