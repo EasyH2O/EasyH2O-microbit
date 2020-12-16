@@ -55,7 +55,7 @@ void loop() {
 //  Check against know command codes.
     if (command == "RF") sendFloats(); // When to command is RF (Read Floats) we send the float data.
     if (command == "SP") switchPump(); // When to command is SP (Switch Pump) we switch the pump.
-    if (command == "PS") Serial.print(pumpState); // When to command is PS (Pump State) we send the status of the pump.
+    if (command == "PS") sendPump(); // When to command is PS (Pump State) we send the status of the pump.
 }
 
 // We read the serial command
@@ -71,7 +71,6 @@ void sendFloats() {
 
     //    We end with a semicolon to indicate the end of this event.
     Serial.print(';');
-    Serial.print("\n");
 }
 
 boolean floatChanged() {
@@ -100,12 +99,19 @@ void switchPump() {
       // turn pump off:
       digitalWrite(pumpPin, LOW);
       pumpState = 0;
-      Serial.print("Switched to 0\n");
+      Serial.print("PF,0;");
     }
     else {
       //  pump on:
       digitalWrite(pumpPin, HIGH);
       pumpState = 1;
-      Serial.print("Switched to 1\n");
+      Serial.print("PF,1;");
     }
+}
+
+void sendPump() {
+  // Send Pump state formatted as output.
+  Serial.print("PF,");
+  Serial.print(pumpState);
+  Serial.print(';');
 }
