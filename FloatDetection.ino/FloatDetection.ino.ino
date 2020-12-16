@@ -54,7 +54,8 @@ void loop() {
 
 //  Check against know command codes.
     if (command == "RF") sendFloats(); // When to command is RF (Read Floats) we send the float data.
-    if (command == "SP") switchPump(); // When to command is Pump we switch the pump.
+    if (command == "SP") switchPump(); // When to command is SP (Switch Pump) we switch the pump.
+    if (command == "PS") Serial.print(pumpState); // When to command is PS (Pump State) we send the status of the pump.
 }
 
 // We read the serial command
