@@ -99,14 +99,13 @@ void switchPump() {
       // turn pump off:
       digitalWrite(pumpPin, LOW);
       pumpState = 0;
-      Serial.print("PV,0;");
     }
     else {
       //  pump on:
       digitalWrite(pumpPin, HIGH);
       pumpState = 1;
-      Serial.print("PV,1;");
     }
+    Serial.print("PV," + pumpState + ";");
 }
 
 void sendPump() {
